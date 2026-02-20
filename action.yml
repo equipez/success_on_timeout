@@ -1,4 +1,4 @@
-name: "Run Bash Command"
+name: "Run Bash Command with Options"
 description: "Run Bash commands in CI. Optionally enforce a time limit and treat timeout as success. Supports Linux/macOS runners."
 
 author: "ZHANG Zaikun (https://www.zhangzk.net)"
