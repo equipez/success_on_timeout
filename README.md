@@ -1,6 +1,6 @@
 # run-bash-command
 
-Run one or more bash commands with a time limit in GitHub Actions. If the command **times out**, this action **treats it as success** (exits `0`). If the command **fails before** the time limit, the action **fails** with the command’s exit code.
+Run one or more Bash commands with a time limit in GitHub Actions. If the command **times out**, this action **treats it as success** (exits `0`). If the command **fails before** the time limit, the action **fails** with the command’s exit code.
 
 This is useful for long-running stress tests where “ran long enough without crashing” is considered a pass.
 
