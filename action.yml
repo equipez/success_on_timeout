@@ -1,5 +1,5 @@
 name: "Success on Timeout"
-description: "Run commands with a time cap; if the cap is reached, terminate the command and return success (exit 0)."
+description: "Run commands with a time limit; if the limit is reached, terminate the command and return success (exit 0)."
 author: "L'Équipe Z (equipez)"
 
 branding:
@@ -7,7 +7,7 @@ branding:
   color: "blue"
 
 inputs:
-  time:
+  timelimit:
     description: "Time limit passed to (g)timeout (e.g., 300s, 45m, 2h)."
     required: true
 
@@ -43,10 +43,10 @@ inputs:
 outputs:
   timed_out:
     description: "true if the command hit the time limit (and was treated as success)."
-    value: ${{ steps.sot.outputs.timed_out }}
+    value: ${{ steps.rbc.outputs.timed_out }}
   exit_code:
     description: "The underlying command exit code (124 means timeout in coreutils semantics)."
-    value: ${{ steps.sot.outputs.exit_code }}
+    value: ${{ steps.rbc.outputs.exit_code }}
 
 runs:
   using: "composite"
@@ -61,11 +61,11 @@ runs:
           brew install coreutils
         fi
 
-    - id: sot
+    - id: rbc
       name: Run with (g)timeout; timeout => success
       shell: bash
       env:
-        INPUT_TIME: ${{ inputs.time }}
+        INPUT_TIME: ${{ inputs.timelimit }}
         INPUT_COMMAND: ${{ inputs.command }}
         INPUT_SIGNAL: ${{ inputs.signal }}
         INPUT_KILL_AFTER: ${{ inputs.kill-after }}

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-: "${INPUT_TIME:?Missing input: time}"
+: "${INPUT_TIME:?Missing input: timelimit}"
 : "${INPUT_COMMAND:?Missing input: command}"
 : "${INPUT_SIGNAL:=TERM}"
 : "${INPUT_KILL_AFTER:=30s}"
@@ -32,7 +32,7 @@ if [[ -n "${INPUT_WORKING_DIRECTORY}" ]]; then
 fi
 
 # Write the user commands to a temp script (multiline supported)
-cmdfile="${RUNNER_TEMP:-/tmp}/success-on-timeout-cmd.sh"
+cmdfile="${RUNNER_TEMP:-/tmp}/run-bash-command-cmd.sh"
 cat >"$cmdfile" <<'HEADER'
 #!/usr/bin/env bash
 set -Eeuo pipefail
@@ -40,7 +40,7 @@ HEADER
 printf '%s\n' "${INPUT_COMMAND}" >>"$cmdfile"
 chmod +x "$cmdfile"
 
-log "success-on-timeout: using ${TIMEOUT_BIN}, limit=${INPUT_TIME}, signal=${INPUT_SIGNAL}, kill-after=${INPUT_KILL_AFTER}"
+log "run-bash-command: using ${TIMEOUT_BIN}, limit=${INPUT_TIME}, signal=${INPUT_SIGNAL}, kill-after=${INPUT_KILL_AFTER}"
 
 set +e
 "$TIMEOUT_BIN" \
@@ -58,7 +58,7 @@ fi
 
 # coreutils: 124 indicates timeout
 if [[ $rc -eq 124 ]]; then
-  log "success-on-timeout: time limit reached -> treating as SUCCESS (exit 0)."
+  log "run-bash-command: time limit reached -> treating as SUCCESS (exit 0)."
   if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
     echo "timed_out=true" >>"$GITHUB_OUTPUT"
   fi

@@ -1,6 +1,6 @@
-# success-on-timeout
+# run-bash-command
 
-Run one or more commands with a time cap in GitHub Actions. If the command **times out**, this action **treats it as success** (exits `0`). If the command **fails before** the time cap, the action **fails** with the command’s exit code.
+Run one or more commands with a time limit in GitHub Actions. If the command **times out**, this action **treats it as success** (exits `0`). If the command **fails before** the time limit, the action **fails** with the command’s exit code.
 
 This is useful for long-running stress tests where “ran long enough without crashing” is considered a pass.
 
@@ -25,9 +25,9 @@ GNU `timeout` returns exit code **124** when the time limit is reached; this act
 
 ```yaml
 - name: Conduct the test; treat timeout as SUCCESS (exit 0)
-  uses: equipez/success-on-timeout@v1
+  uses: equipez/run-bash-command@v1
   with:
-    time: 350m
+    timelimit: 350m
     command: |
       command1
       command2 argA argB
@@ -39,9 +39,9 @@ GNU `timeout` returns exit code **124** when the time limit is reached; this act
 ```yaml
 - name: Run stress test (timeout => success)
   id: stress
-  uses: equipez/success-on-timeout@v1
+  uses: equipez/run-bash-command@v1
   with:
-    time: 350m
+    timelimit: 350m
     command: |
       ./stress-test --big
 
@@ -57,7 +57,7 @@ GNU `timeout` returns exit code **124** when the time limit is reached; this act
 
 | Name | Required | Default | Description |
 |---|---:|---|---|
-| `time` | yes | — | Time limit passed to `(g)timeout` (e.g. `300s`, `45m`, `2h`). |
+| `timelimit` | yes | — | Time limit passed to `(g)timeout` (e.g. `300s`, `45m`, `2h`). |
 | `command` | yes | — | Command(s) to run. Multiline supported. |
 | `signal` | no | `TERM` | Signal sent when the time limit is reached. |
 | `kill-after` | no | `30s` | Wait time before sending `SIGKILL` after `signal`. |
@@ -81,9 +81,9 @@ GNU `timeout` returns exit code **124** when the time limit is reached; this act
 ### 1) Treat “ran 30 minutes” as pass, but fail on real errors
 
 ```yaml
-- uses: equipez/success-on-timeout@v1
+- uses: equipez/run-bash-command@v1
   with:
-    time: 30m
+    timelimit: 30m
     command: |
       ./run-long-test-suite
 ```
@@ -97,9 +97,9 @@ GNU `timeout` returns exit code **124** when the time limit is reached; this act
 Some processes prefer `INT` (Ctrl+C) or `HUP` for graceful shutdown:
 
 ```yaml
-- uses: equipez/success-on-timeout@v1
+- uses: equipez/run-bash-command@v1
   with:
-    time: 50m
+    timelimit: 50m
     signal: INT
     kill-after: 20s
     command: |
@@ -109,9 +109,9 @@ Some processes prefer `INT` (Ctrl+C) or `HUP` for graceful shutdown:
 ### 3) Set a working directory
 
 ```yaml
-- uses: equipez/success-on-timeout@v1
+- uses: equipez/run-bash-command@v1
   with:
-    time: 20m
+    timelimit: 20m
     working-directory: matlab/tests
     command: |
       ./run_tests.sh
@@ -133,7 +133,7 @@ If you set `install-coreutils: false`, ensure `gtimeout` is already available on
 
 ## Important notes & limitations
 
-- **GitHub-hosted runner hard limit still applies.** Choose `time` with a buffer below your job’s `timeout-minutes` and below GitHub’s platform limit.
+- **GitHub-hosted runner hard limit still applies.** Choose `timelimit` with a buffer below your job’s `timeout-minutes` and below GitHub’s platform limit.
 - **This action requires Bash and `(g)timeout`.** It is intended for `ubuntu-latest` and `macos-latest` runners.
 - **Timeout is treated as success by design.** Only use this when “time limit reached without crashing” is an acceptable success criterion.
 - **Exit code semantics:** GNU `timeout` uses `124` for timeouts. If your wrapped command itself returns `124`, it will be indistinguishable from a timeout in this action’s current design.
