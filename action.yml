@@ -1,4 +1,4 @@
-name: "Success on Timeout"
+name: "Run Bash Command"
 description: "Run commands with a time limit; if the limit is reached, terminate the command and return success (exit 0)."
 author: "L'Équipe Z (equipez)"
 
