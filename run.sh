@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-: "${INPUT_TIME:?Missing input: timelimit}"
+: "${INPUT_TIMELIMIT:?Missing input: timelimit}"
 : "${INPUT_COMMAND:?Missing input: command}"
 : "${INPUT_SIGNAL:=TERM}"
 : "${INPUT_KILL_AFTER:=30s}"
@@ -40,13 +40,13 @@ HEADER
 printf '%s\n' "${INPUT_COMMAND}" >>"$cmdfile"
 chmod +x "$cmdfile"
 
-log "run-bash-command: using ${TIMEOUT_BIN}, limit=${INPUT_TIME}, signal=${INPUT_SIGNAL}, kill-after=${INPUT_KILL_AFTER}"
+log "run-bash-command: using ${TIMEOUT_BIN}, limit=${INPUT_TIMELIMIT}, signal=${INPUT_SIGNAL}, kill-after=${INPUT_KILL_AFTER}"
 
 set +e
 "$TIMEOUT_BIN" \
   --signal="${INPUT_SIGNAL}" \
   --kill-after="${INPUT_KILL_AFTER}" \
-  "${INPUT_TIME}" \
+  "${INPUT_TIMELIMIT}" \
   bash "$cmdfile"
 rc=$?
 set -e

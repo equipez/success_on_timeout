@@ -66,7 +66,7 @@ runs:
       name: Run with (g)timeout; timeout => success
       shell: bash
       env:
-        INPUT_TIME: ${{ inputs.timelimit }}
+        INPUT_TIMELIMIT: ${{ inputs.timelimit }}
         INPUT_COMMAND: ${{ inputs.command }}
         INPUT_SIGNAL: ${{ inputs.signal }}
         INPUT_KILL_AFTER: ${{ inputs.kill-after }}
